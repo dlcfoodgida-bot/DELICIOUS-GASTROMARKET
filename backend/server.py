@@ -457,7 +457,7 @@ async def update_cart_item(session_id: str, item: CartItemUpdate):
         {"$set": cart}
     )
     
-    return {"message": "Cart updated", "cart": cart}
+    return {"message": "Cart updated", "cart": serialize_doc(cart)}
 
 @api_router.delete("/cart/{session_id}/remove/{product_id}")
 async def remove_from_cart(session_id: str, product_id: str):
