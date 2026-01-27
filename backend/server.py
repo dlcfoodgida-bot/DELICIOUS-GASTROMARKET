@@ -427,7 +427,7 @@ async def add_to_cart(session_id: str, item: CartItemAdd):
         upsert=True
     )
     
-    return {"message": "Item added to cart", "cart": cart}
+    return {"message": "Item added to cart", "cart": serialize_doc(cart)}
 
 @api_router.put("/cart/{session_id}/update")
 async def update_cart_item(session_id: str, item: CartItemUpdate):
