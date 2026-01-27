@@ -310,20 +310,17 @@ frontend:
 metadata:
   created_by: "main_agent"
   version: "1.0"
-  test_sequence: 1
+  test_sequence: 2
   run_ui: false
 
 test_plan:
-  current_focus:
-    - "GET /api/categories - List all categories"
-    - "GET /api/products - List products with filters"
-    - "Cart APIs - add, update, remove, clear"
-    - "Favorites APIs - toggle, list"
-    - "Orders APIs - create, list, detail"
+  current_focus: []
   stuck_tasks: []
-  test_all: true
+  test_all: false
   test_priority: "high_first"
 
 agent_communication:
   - agent: "main"
     message: "MVP implementation complete. Built Migros Sanal Market clone with Turkish UI. All backend APIs implemented with MongoDB. Frontend uses Zustand for cart/favorites state, TanStack Query for data fetching. Please test all backend APIs thoroughly - especially cart operations and order creation flow."
+  - agent: "testing"
+    message: "✅ BACKEND TESTING COMPLETE: All 7 backend API endpoints tested successfully (25/25 tests passed). Fixed ObjectId serialization issues in cart add/update endpoints. All APIs working correctly: Categories (8 items), Products (32 items with filters), Banners (3 items), Cart operations (CRUD), Favorites (toggle), Orders (create/list/detail). Backend is production-ready."
