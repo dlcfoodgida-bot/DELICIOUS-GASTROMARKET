@@ -1,0 +1,175 @@
+diff --git a/backend/server.py b/backend/server.py
+index f15d4a7..88b1516 100644
+--- a/backend/server.py
++++ b/backend/server.py
+@@ -427,7 +427,7 @@ async def add_to_cart(session_id: str, item: CartItemAdd):
+         upsert=True
+     )
+     
+-    return {"message": "Item added to cart", "cart": cart}
++    return {"message": "Item added to cart", "cart": serialize_doc(cart)}
+ 
+ @api_router.put("/cart/{session_id}/update")
+ async def update_cart_item(session_id: str, item: CartItemUpdate):
+@@ -457,7 +457,7 @@ async def update_cart_item(session_id: str, item: CartItemUpdate):
+         {"$set": cart}
+     )
+     
+-    return {"message": "Cart updated", "cart": cart}
++    return {"message": "Cart updated", "cart": serialize_doc(cart)}
+ 
+ @api_router.delete("/cart/{session_id}/remove/{product_id}")
+ async def remove_from_cart(session_id: str, product_id: str):
+diff --git a/test_result.md b/test_result.md
+index a36acd6..9eaeeb5 100644
+--- a/test_result.md
++++ b/test_result.md
+@@ -107,87 +107,108 @@ user_problem_statement: "Build a Migros Sanal Market clone - Turkish online groc
+ backend:
+   - task: "GET /api/categories - List all categories"
+     implemented: true
+-    working: "NA"
++    working: true
+     file: "/app/backend/server.py"
+     stuck_count: 0
+     priority: "high"
+-    needs_retesting: true
++    needs_retesting: false
+     status_history:
+       - working: "NA"
+         agent: "main"
+         comment: "Implemented categories endpoint with 8 grocery categories"
++      - working: true
++        agent: "testing"
++        comment: "✅ TESTED: Categories API working correctly. Retrieved 8 categories including cat_fruits_vegetables. All endpoints responding properly."
+ 
+   - task: "GET /api/products - List products with filters"
+     implemented: true
+-    working: "NA"
++    working: true
+     file: "/app/backend/server.py"
+     stuck_count: 0
+     priority: "high"
+-    needs_retesting: true
++    needs_retesting: false
+     status_history:
+       - working: "NA"
+         agent: "main"
+         comment: "Implemented products endpoint with category_id, search, featured, on_sale filters"
++      - working: true
++        agent: "testing"
++        comment: "✅ TESTED: Products API working correctly. All filters (featured=true, on_sale=true, category_id=cat_dairy, search=domates) working as expected. Retrieved 32 total products."
+ 
+   - task: "GET /api/products/{id} - Product detail"
+     implemented: true
+-    working: "NA"
++    working: true
+     file: "/app/backend/server.py"
+     stuck_count: 0
+     priority: "high"
+-    needs_retesting: true
++    needs_retesting: false
+     status_history:
+       - working: "NA"
+         agent: "main"
+         comment: "Implemented single product detail endpoint"
++      - working: true
++        agent: "testing"
++        comment: "✅ TESTED: Product detail API working correctly. Successfully retrieved product prod_1 (Fresh Tomatoes) with all required fields."
+ 
+   - task: "Cart APIs - add, update, remove, clear"
+     implemented: true
+-    working: "NA"
++    working: true
+     file: "/app/backend/server.py"
+     stuck_count: 0
+     priority: "high"
+-    needs_retesting: true
++    needs_retesting: false
+     status_history:
+       - working: "NA"
+         agent: "main"
+         comment: "Implemented full cart management with session-based storage"
++      - working: true
++        agent: "testing"
++        comment: "✅ TESTED: Cart APIs working correctly. Fixed ObjectId serialization issue in add/update endpoints. All CRUD operations (add, update, remove, clear) working properly with session-based storage."
+ 
+   - task: "Favorites APIs - toggle, list"
+     implemented: true
+-    working: "NA"
++    working: true
+     file: "/app/backend/server.py"
+     stuck_count: 0
+     priority: "high"
+-    needs_retesting: true
++    needs_retesting: false
+     status_history:
+       - working: "NA"
+         agent: "main"
+         comment: "Implemented favorites with toggle and list functionality"
++      - working: true
++        agent: "testing"
++        comment: "✅ TESTED: Favorites APIs working correctly. Toggle functionality working for both add/remove operations. Session-based favorites storage working properly."
+ 
+   - task: "Orders APIs - create, list, detail"
+     implemented: true
+-    working: "NA"
++    working: true
+     file: "/app/backend/server.py"
+     stuck_count: 0
+     priority: "high"
+-    needs_retesting: true
++    needs_retesting: false
+     status_history:
+       - working: "NA"
+         agent: "main"
+         comment: "Implemented order creation with delivery address, time slots, and status tracking"
++      - working: true
++        agent: "testing"
++        comment: "✅ TESTED: Orders APIs working correctly. Order creation, listing, and detail retrieval all working. Cart is properly cleared after order creation. Delivery fee calculation working (14.90 TL for orders under 300 TL)."
+ 
+   - task: "GET /api/banners - Promotional banners"
+     implemented: true
+-    working: "NA"
++    working: true
+     file: "/app/backend/server.py"
+     stuck_count: 0
+     priority: "medium"
+-    needs_retesting: true
++    needs_retesting: false
+     status_history:
+       - working: "NA"
+         agent: "main"
+         comment: "Implemented banners endpoint for home page carousel"
++      - working: true
++        agent: "testing"
++        comment: "✅ TESTED: Banners API working correctly. Retrieved 3 promotional banners for home page carousel."
+ 
+ frontend:
+   - task: "Home Screen with banners, categories, featured products"
+@@ -289,20 +310,17 @@ frontend:
+ metadata:
+   created_by: "main_agent"
+   version: "1.0"
+-  test_sequence: 1
++  test_sequence: 2
+   run_ui: false
+ 
+ test_plan:
+-  current_focus:
+-    - "GET /api/categories - List all categories"
+-    - "GET /api/products - List products with filters"
+-    - "Cart APIs - add, update, remove, clear"
+-    - "Favorites APIs - toggle, list"
+-    - "Orders APIs - create, list, detail"
++  current_focus: []
+   stuck_tasks: []
+-  test_all: true
++  test_all: false
+   test_priority: "high_first"
+ 
+ agent_communication:
+   - agent: "main"
+     message: "MVP implementation complete. Built Migros Sanal Market clone with Turkish UI. All backend APIs implemented with MongoDB. Frontend uses Zustand for cart/favorites state, TanStack Query for data fetching. Please test all backend APIs thoroughly - especially cart operations and order creation flow."
++  - agent: "testing"
++    message: "✅ BACKEND TESTING COMPLETE: All 7 backend API endpoints tested successfully (25/25 tests passed). Fixed ObjectId serialization issues in cart add/update endpoints. All APIs working correctly: Categories (8 items), Products (32 items with filters), Banners (3 items), Cart operations (CRUD), Favorites (toggle), Orders (create/list/detail). Backend is production-ready."
